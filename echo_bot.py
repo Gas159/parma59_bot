@@ -59,7 +59,7 @@ async def send_echo(message: Message):
 
                     await bot.send_message(chat_id=v, text=message.text[1:])
                 
-                    await message.answer(text=f"Message sent to {message.chat.title}")
+                    await message.answer(text=f"Message sent to {k}")
                 # await message.reply(text=(message.text + ' ' + str(message.chat.id)))
 
 
