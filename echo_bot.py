@@ -47,7 +47,7 @@ async def send_echo(message: Message):
     # print(current_chat_id, type(current_chat_id))
     #print(type(message.text))
     print(message.text)
-    print(message)
+    print(message.model_dump_json(indent=4, exclude_none=True))
     if message.text:
 
         if message.text.startswith('!') :
@@ -59,7 +59,7 @@ async def send_echo(message: Message):
 
                     await bot.send_message(chat_id=v, text=message.text[1:])
                 else:
-                    await message.reply(text='Message sent')
+                    await message.answer(text='Message sent')
                 # await message.reply(text=(message.text + ' ' + str(message.chat.id)))
 
 
