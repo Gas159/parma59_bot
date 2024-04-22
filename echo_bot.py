@@ -48,7 +48,7 @@ async def send_echo(message: Message):
     print(message.text)
     if message.text:
 
-        if message.text.startswith('!') and:
+        if message.text.startswith('!') :
             # if message.text
             for k, v in list_of_chats.items():
 
