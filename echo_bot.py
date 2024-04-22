@@ -37,7 +37,7 @@ list_of_chats = {'test': -4161841389,
 
 # Этот хэндлер будет срабатывать на любые ваши текстовые сообщения,
 # кроме команд "/start" и "/help"
-@dp.message(F.text.startswith("!") & lambda msg:len(msg)>1)
+@dp.message(F.text.startswith("!"), lambda msg:len(msg.text)>1)
 async def send_echo(message: Message):
     # await bot.send_message(chat_id='ID или название чата', text='Какой-то текст')
     # print(message)
