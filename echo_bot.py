@@ -16,17 +16,17 @@ dp = Dispatcher()
 
 
 # Этот хэндлер будет срабатывать на команду "/start"
-@dp.message(Command(commands=["start"]))
-async def process_start_command(message: Message):
-    await message.answer('Привет!\nМеня зовут Эхо-бот!\nНапиши мне что-нибудь')
-
-
-# Этот хэндлер будет срабатывать на команду "/help"
-@dp.message(Command(commands=['help']))
-async def process_help_command(message: Message):
-    await message.answer(
-        'Напиши мне что-нибудь'
-    )
+# @dp.message(Command(commands=["start"]))
+# async def process_start_command(message: Message):
+#     await message.answer('Привет!\nМеня зовут Эхо-бот!\nНапиши мне что-нибудь')
+#
+#
+# # Этот хэндлер будет срабатывать на команду "/help"
+# @dp.message(Command(commands=['help']))
+# async def process_help_command(message: Message):
+#     await message.answer(
+#         'Напиши мне что-нибудь'
+#     )
 
 
 list_of_chats = {'test': -4161841389,
@@ -43,18 +43,24 @@ async def send_echo(message: Message):
     # await bot.send_message(chat_id=message.chat.id, text=message.text)
     current_chat_id = message.chat.id
     print('Current chat id')
-    print(current_chat_id, type(current_chat_id))
+    # print(current_chat_id, type(current_chat_id))
     print(type(message.text))
-    if message.text.startswith('!'):
-        # if message.text
-        for k, v in list_of_chats.items():
+    print(message.text)
+    if message.text:
 
-            if not v == current_chat_id:
-                await bot.send_message(chat_id=v, text=message.text)
-            else:
-                await bot.send_message(chat_id=v, text='Message sent ' + str(message.text))
-            # await message.reply(text=(message.text + ' ' + str(message.chat.id)))
+        if message.text.startswith('!'):
+            # if message.text
+            for k, v in list_of_chats.items():
+
+                if not v == current_chat_id:
+                    print(type(message.text))
+
+                    await bot.send_message(chat_id=v, text=message.text)
+                else:
+                    await bot.send_message(chat_id=v, text='Message sent')
+                # await message.reply(text=(message.text + ' ' + str(message.chat.id)))
 
 
 if __name__ == '__main__':
     dp.run_polling(bot)
+    print('Running')
