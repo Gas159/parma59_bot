@@ -55,7 +55,7 @@ async def send_echo(message: Message):
                 if not v == current_chat_id:
                     print(type(message.text))
 
-                    await bot.send_message(chat_id=v, text=message.text)
+                    await bot.send_message(chat_id=v, text=message.text[1:])
                 else:
                     await bot.send_message(chat_id=v, text='Message sent')
                 # await message.reply(text=(message.text + ' ' + str(message.chat.id)))
