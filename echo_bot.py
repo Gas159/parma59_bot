@@ -37,7 +37,7 @@ list_of_chats = {'test': -4161841389,
 
 # Этот хэндлер будет срабатывать на любые ваши текстовые сообщения,
 # кроме команд "/start" и "/help"
-@dp.message(F.text.startswith("!"), lambda msg:len(msg.text)>1)
+@dp.message(F.text.startswith(("!","й","Й")) & F.text.startswith('й', lambda msg:len(msg.text)>1)
 async def send_echo(message: Message):
     # await bot.send_message(chat_id='ID или название чата', text='Какой-то текст')
     # print(message)
@@ -50,7 +50,7 @@ async def send_echo(message: Message):
     print(message.model_dump_json(indent=4, exclude_none=True))
     if message.text:
 
-        if message.text.startswith('!') :
+        if message.text.startswith(('!',"й","Й")) :
             # if message.text
             for k, v in list_of_chats.items():
 
@@ -59,7 +59,7 @@ async def send_echo(message: Message):
 
                     await bot.send_message(chat_id=v, text=message.text[1:])
                 else:
-                    await message.answer(text='Message sent')
+                    await message.answer(text=f"Message sent to {message.chat["title"]")
                 # await message.reply(text=(message.text + ' ' + str(message.chat.id)))
 
 
