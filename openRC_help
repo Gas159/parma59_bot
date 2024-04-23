@@ -1,0 +1,22 @@
+
+# Проверка отказавших служб.
+rc-status --crashed
+
+# Проверка служб.
+rc-status
+
+# Отображение всех доступных служб.
+rc-update -v show
+
+# Изменить состояние службы.
+rc-service daemon (start, stop, restart, status)
+
+# Включить или выключить службу.
+rc-update (add, del) daemon
+
+# Включить или выключить службу(юзал это)
+rc-update add "myservice" default
+
+ df -h
+
+pkill -f '/root/parma_bot/parma59_bot/.venv/bin/python3'
