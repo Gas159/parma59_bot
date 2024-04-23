@@ -1,5 +1,7 @@
+import asyncio
 import logging
 from aiogram import Bot, Dispatcher
+from aiogram.methods.delete_webhook import DeleteWebhook
 from aiogram.types import Message
 from aiogram import F
 # from aiogram.utils import executor
@@ -38,6 +40,7 @@ list_of_chats = {'test': -4161841389,
 @dp.message(F.text.startswith(("!", "й", "Й")), lambda msg: len(msg.text) > 1)
 async def send_echo(message: Message):
     try:
+
         # logging.info('hi')
         print(message.model_dump_json(indent=4, exclude_none=True))
         for name, chat_id in list_of_chats.items():
@@ -63,6 +66,28 @@ async def send_photo(message: Message):
         logging.exception(e)
 
 
+async def delete_webhook_and_handle_updates():
+    # Удаление вебхука
+    await bot.delete_webhook(drop_pending_updates=True)
+
+    # Начало обработки обновлений через периодический опрос
+    await dp.start_polling(bot)
+
+
+# Запуск асинхронной функции
 if __name__ == '__main__':
-    dp.run_polling(bot, skip_updates=True)
-    # executor.start_polling(dp, skip_updates=True)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(delete_webhook_and_handle_updates())
+
+# if __name__ == '__main__':
+#     dp.run_polling(bot, skip_updates=True)
+
+# async def delete_webhook_and_handle_updates():
+#     await bot.delete_webhook(drop_pending_updates=True)
+#     await dp.run_polling(bot)
+#
+#
+# if __name__ == '__main__':
+#     # loop = asyncio.get_event_loop()
+#     # loop.run_until_complete(delete_webhook_and_handle_updates())
+#     delete_webhook_and_handle_updates()

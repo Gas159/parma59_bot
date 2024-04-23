@@ -1,0 +1,1 @@
+pkill -f /root/parma_bot/parma59_bot/.venv/bin/python3
