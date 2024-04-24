@@ -1,5 +1,7 @@
 import asyncio
 import logging
+
+import requests
 from aiogram import Bot, Dispatcher
 from aiogram.methods.delete_webhook import DeleteWebhook
 from aiogram.types import Message
@@ -17,6 +19,8 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 logging.basicConfig(level=logging.INFO)
+API_CATS_URL = 'https://api.thecatapi.com/v1/images/search'
+API_URL = 'https://api.telegram.org/bot'
 
 # Этот хэндлер будет срабатывать на команду "/start"
 # @dp.message(Command(commands=["start"]))
@@ -35,6 +39,25 @@ logging.basicConfig(level=logging.INFO)
 list_of_chats = {'test': -4161841389,
                  'pdd': -1002097028485,
                  'parma': -1002020818544}
+
+
+@dp.message(F.text.startswith(("й", "Й")))
+async def send_echo(message: Message):
+    try:
+        cat_response = requests.get(API_CATS_URL)
+        print(cat_response, type(cat_response))
+        if cat_response.status_code == 200:
+            cat_link = cat_response.json()[0]['url']
+            print(cat_response.json())
+            # chat_id = result['message']['from']['id']
+            # await bot.send_message(chat_id=massage.chat.id, text=message.text[1:])
+            # await message.answer()
+            requests.get(f'{API_URL}{BOT_TOKEN}/sendPhoto?chat_id={message.chat.id}&photo={cat_link}')
+        else:
+            requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={ERROR_TEXT}')
+        #     requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={ERROR_TEXT}')
+    except Exception as e:
+        logging.CRITICAL(e)
 
 
 @dp.message(F.text.startswith(("!", "й", "Й")), lambda msg: len(msg.text) > 1)
