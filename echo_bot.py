@@ -3,7 +3,6 @@ import logging
 
 import requests
 from aiogram import Bot, Dispatcher
-from aiogram.methods.delete_webhook import DeleteWebhook
 from aiogram.types import Message
 from aiogram import F
 # from aiogram.utils import executor
@@ -21,7 +20,7 @@ dp = Dispatcher()
 logging.basicConfig(level=logging.INFO)
 API_CATS_URL = 'https://api.thecatapi.com/v1/images/search'
 API_URL = 'https://api.telegram.org/bot'
-
+ERROR_TEXT = 'Здесь должна была быть картинка с котиком :('
 # Этот хэндлер будет срабатывать на команду "/start"
 # @dp.message(Command(commands=["start"]))
 # async def process_start_command(message: Message):
@@ -54,10 +53,10 @@ async def send_echo(message: Message):
             # await message.answer()
             requests.get(f'{API_URL}{BOT_TOKEN}/sendPhoto?chat_id={message.chat.id}&photo={cat_link}')
         else:
-            requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={ERROR_TEXT}')
+            requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={message.chat.id}&text={ERROR_TEXT}')
         #     requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={ERROR_TEXT}')
     except Exception as e:
-        logging.CRITICAL(e)
+        logging.exception(e)
 
 
 @dp.message(F.text.startswith(("!", "й", "Й")), lambda msg: len(msg.text) > 1)
