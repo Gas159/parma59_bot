@@ -59,7 +59,7 @@ async def send_echo_cat(message: Message):
 async def send_text_test(message: Message):
     try:
         print(message.model_dump_json(indent=4, exclude_none=True))
-        for name, chat_id in list_of_chats.items():
+        for name, chat_id in test_chats.items():
             if not chat_id == message.chat.id:
                 await bot.send_message(chat_id=chat_id, text=message.text[1:])
         await message.answer(text=f"Сообщение отправлено.")
@@ -79,7 +79,7 @@ async def send_photo_test(message: Message):
         print()
 
         if message.caption and message.caption.startswith('!'):
-            for chat_name, chat_id in list_of_chats.items():
+            for chat_name, chat_id in test_chats.items():
                 if not chat_id == message.chat.id:
                     await message.copy_to(chat_id=chat_id)
                     print('Eto date of cap1: ', date_of_caption['date'])
@@ -105,7 +105,7 @@ async def send_photo_test(message: Message):
         print('Eto update_id: ', message.message_id)
 
         if date_of_caption['date'] == message.date:
-            for chat_name, chat_id in list_of_chats.items():
+            for chat_name, chat_id in test_chats.items():
                 if not chat_id == message.chat.id:
                     await message.copy_to(chat_id=chat_id)
                     print('!!!')
