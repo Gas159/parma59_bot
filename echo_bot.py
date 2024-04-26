@@ -37,7 +37,7 @@ async def process_start_command(message: Message):
     await message.answer('Начни предложение/подпись фото с "!" чтобы отправить его в др группу.\n ')
 
 
-@dp.message(F.text.startswith(("й", "Й", 'q', 'Q', 'cat', 'mem', "кот")))
+@dp.message(F.text.lower().startswith(("й", 'q', 'cat', "кот")))
 async def send_echo_cat(message: Message):
     try:
         cat_response = requests.get(API_CATS_URL)
@@ -67,49 +67,22 @@ async def send_text_test(message: Message):
         logging.exception(e)
 
 
-@dp.message(F.photo | F.document, F.caption.startswith('!'))
-async def send_photo_test(message: Message):
-    try:
-        date_of_caption['date'] = message.date
-        # print(message.model_dump_json(indent=4, exclude_none=True))
-        print(message.caption, type(message.caption))
-        print(message.message_id)
-        print('eto date of caption: ', date_of_caption['date'])
-        print('eto message date: ', message.date)
-        print()
-
-        if message.caption and message.caption.startswith('!'):
-            for chat_name, chat_id in list_of_chats.items():
-                if not chat_id == message.chat.id:
-                    await message.copy_to(chat_id=chat_id)
-                    print('Eto date of cap1: ', date_of_caption['date'])
-                    print('Eto message date1: ', message.date)
-                    print('Eto update_id: ', message.message_id)
-            await message.answer(text=f"Файл отправлен.")
-    except Exception as e:
-        logging.exception(e)
+async def send_file(msg: Message):
+    for chat_name, chat_id in list_of_chats.items():
+        if not chat_id == msg.chat.id:
+            await msg.copy_to(chat_id=chat_id)
+    await msg.answer(text=f"Файл отправлен.")
 
 
 @dp.message(F.photo | F.document)
 async def send_photo_test(message: Message):
     try:
-        # print()
-        # print(message.model_dump_json(indent=4, exclude_none=True))
-        print(message.caption, type(message.caption))
-        print(message.message_id)
-        print('eto date of caption: ', date_of_caption['date'])
-        print('eto message date: ', message.date)
-        print()
-        print('Step without caption: ', date_of_caption['date'])
-        print('Step without caption: ', date_of_caption['date'] == message.date)
-        print('Eto update_id: ', message.message_id)
+        if message.caption and message.caption.startswith('!'):
+            date_of_caption['date'] = message.date
+            await send_file(message)
 
-        if date_of_caption['date'] == message.date:
-            for chat_name, chat_id in list_of_chats.items():
-                if not chat_id == message.chat.id:
-                    await message.copy_to(chat_id=chat_id)
-                    print('!!!')
-            await message.answer(text=f"Файл отправлен.")
+        elif date_of_caption['date'] == message.date:
+            await send_file(message)
 
     except Exception as e:
         logging.exception(e)
