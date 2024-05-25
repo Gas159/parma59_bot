@@ -19,7 +19,7 @@ dp: Dispatcher = Dispatcher()
 logging.basicConfig(level=logging.INFO)
 API_CATS_URL = 'https://api.thecatapi.com/v1/images/search'
 API_URL = 'https://api.telegram.org/bot'
-ERROR_TEXT = 'Здесь должна была быть картинка с котиком :('
+ERROR_TEXT = 'Здесь должна была быть картинка с котиком1 :('
 
 
 @dp.message(F.text.startswith(("й", "Й", 'q', 'Q', 'cat', 'mem', "кот")))
