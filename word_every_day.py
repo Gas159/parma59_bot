@@ -33,6 +33,7 @@ test_chats: dict[str, int] = {'test_1': -4161841389,
 list_of_records = ['1', '2', '3', '4', '5']
 
 
+
 def shuffle(lst):
     random.shuffle(lst)
     for i in lst:
@@ -40,6 +41,21 @@ def shuffle(lst):
 
 
 date_of_caption = {'date': ''}
+
+q = '''
+Контекстный менеджер в Python - это объект, который определяет вход и выход из контекста с помощью методов enter() и exit().
+
+Literal - от английского "literally", то есть "буквально".
+
+Метаклассы - это классы, которые определяют поведение других классов.
+
+Ктотофлоу, канбан, эджайл --> скрам -- методология косанды, покер планиров
+'''
+# print(q)
+lines = q.split('\n')
+# print(lines)
+
+text = [i.strip('') for i in lines if i.strip()]
 
 
 # Этот хэндлер будет срабатывать на команду "/help"
@@ -83,7 +99,7 @@ async def send_text_test(message: Message):
     try:
         print(message.model_dump_json(indent=4, exclude_none=True))
         phrase = next(shuffle(text))
-        await message.answer(text=f"Сообщение отправлено.")
+        # await message.answer(text=f"Сообщение отправлено.")
         await message.answer(text=phrase)
     except Exception as e:
         logging.exception(e)
