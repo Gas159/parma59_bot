@@ -12,7 +12,7 @@ import os
 
 load_dotenv()  # take environment variables from .env.
 
-# Вместо BOT TOKEN HERE нужно вставить токен вашего бота, полученный у @BotFather
+# Вместо BOT TOKEN HERE нужно вставить токен вашего бота,, полученный у @BotFather
 BOT_TOKEN: str = os.getenv('BOT_TOKEN')
 bot: Bot = Bot(token=BOT_TOKEN)
 dp: Dispatcher = Dispatcher()
