@@ -6,7 +6,7 @@ rc-status --crashed
 rc-status
 
 # Отображение всех доступных служб.
-rc-update -v show
+rc-update -v showe
 
 # Изменить состояние службы.
 rc-service "myservice" (start, stop, restart, status)
