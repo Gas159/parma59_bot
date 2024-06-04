@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import random
 
 import requests
 from aiogram import Bot, Dispatcher
@@ -9,6 +10,7 @@ from aiogram import F
 
 from dotenv import load_dotenv
 import os
+from test1 import text
 
 load_dotenv()  # take environment variables from .env.
 
@@ -27,6 +29,15 @@ list_of_chats: dict[str, int] = {'pdd': -1002097028485,
 
 test_chats: dict[str, int] = {'test_1': -4161841389,
                               'test_2': -4155526550, }
+
+list_of_records = ['1', '2', '3', '4', '5']
+
+
+def shuffle(lst):
+    random.shuffle(lst)
+    for i in lst:
+        yield i
+
 
 date_of_caption = {'date': ''}
 
@@ -67,16 +78,16 @@ async def send_text_test(message: Message):
         logging.exception(e)
 
 
-@dp.message(F.text.startswith("1"), lambda msg: len(msg.text) > 1)
+@dp.message(F.text.startswith("1"))  # lambda msg: len(msg.text) > 1
 async def send_text_test(message: Message):
     try:
         print(message.model_dump_json(indent=4, exclude_none=True))
-        for name, chat_id in test_chats.items():
-            if not chat_id == message.chat.id:
-                await bot.send_message(chat_id=chat_id, text=message.text[1:])
+        phrase = next(shuffle(text))
         await message.answer(text=f"Сообщение отправлено.")
+        await message.answer(text=phrase)
     except Exception as e:
         logging.exception(e)
+
 
 async def send_file(msg: Message):
     for chat_name, chat_id in test_chats.items():
