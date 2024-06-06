@@ -99,7 +99,7 @@ async def send_text_test(message: Message):
     try:
         print(message.model_dump_json(indent=4, exclude_none=True))
         phrase = next(shuffle(text))
-        await message.answer(text=f"Сообщение отправлено.")отправлено
+        # await message.answer(text=f"Сообщение отправлено.")отправлено
         await message.answer(text=phrase)
     except Exception as e:
         logging.exception(e)
