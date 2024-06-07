@@ -1,12 +1,14 @@
 import asyncio
 import logging
 import random
+import sys
+from typing import Callable, Dict, Any, Awaitable
 
-import aioschedule
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import requests
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, BaseMiddleware
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.types import Message, TelegramObject
 from aiogram import F
 
 from dotenv import load_dotenv
@@ -59,6 +61,22 @@ lines = q.split('\n')
 # print(lines)
 
 text = [i.strip('') for i in lines if i.strip()]
+
+
+# Add middleware Scheduler
+class SchedulerMiddleware(BaseMiddleware):
+    def __init__(self, scheduler: AsyncIOScheduler):
+        self.scheduler = scheduler
+
+    async def __call__(
+            self,
+            handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
+            event: TelegramObject,
+            data: Dict[str, Any],
+    ) -> Any:
+        # add apscheduler to data
+        data["apscheduler"] = self.scheduler
+        return await handler(event, data)
 
 
 # Этот хэндлер будет срабатывать на команду "/help"
@@ -115,7 +133,8 @@ async def scheduler():
         await aioschedule.run_pending()
         await asyncio.sleep(1)
 
-async def send_text_test1(message: Message=None):
+
+async def send_text_test1(message: Message = None):
     try:
         # print(message.model_dump_json(indent=4, exclude_none=True))
         phrase = next(shuffle(text))
@@ -127,8 +146,6 @@ async def send_text_test1(message: Message=None):
 
 async def on_startup():
     asyncio.create_task(scheduler())
-
-
 
 
 async def send_file(msg: Message):
@@ -180,12 +197,29 @@ async def send_photo_test(message: Message):
 async def delete_webhook_and_handle_updates():
     # Удаление вебхука
     await bot.delete_webhook(drop_pending_updates=True)
-    await on_startup(bot)
+
     # Начало обработки обновлений через периодический опрос
     await dp.start_polling(bot, on_startup=on_startup)
 
 
-# Запуск асинхронной функции
-if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(delete_webhook_and_handle_updates())
+async def main() -> None:
+    # Initialize Bot instance with a default parse mode which will be passed to all API calls
+    bot = Bot(BOT_TOKEN)
+    # And the run events dispatching
+    scheduler = AsyncIOScheduler()
+    timezone="Europe/Moscow"
+
+    dp.update.middleware(
+        SchedulerMiddleware(scheduler=scheduler),
+    )
+    scheduler.start()
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    asyncio.run(main())
+
+# # Запуск асинхронной функции
+# if __name__ == '__main__':
+#     loop = asyncio.get_event_loop()
+#     loop.run_until_complete(delete_webhook_and_handle_updates())
