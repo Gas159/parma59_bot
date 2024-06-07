@@ -10,6 +10,7 @@ python = "^3.10"
 aiogram = "^3.4.1"
 requests = "^2.31.0"
 python-dotenv = "^1.0.1"
+aioschedule = "^0.5.2"
 
 
 [build-system]

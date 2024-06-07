@@ -2,6 +2,7 @@ import asyncio
 import logging
 import random
 
+import aioschedule
 import requests
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
@@ -105,6 +106,28 @@ async def send_text_test(message: Message):
         await message.answer(text=phrase)
     except Exception as e:
         logging.exception(e)
+
+
+async def scheduler():
+    aioschedule.every().day.at("17:45").do(send_text_test1)
+    while True:
+        await aioschedule.run_pending()
+        await asyncio.sleep(1)
+
+async def send_text_test1(message: Message):
+    try:
+        print(message.model_dump_json(indent=4, exclude_none=True))
+        phrase = next(shuffle(text))
+        # await message.answer(text=f"Сообщение отправлено.")отправлено
+        await message.answer(text=phrase)
+    except Exception as e:
+        logging.exception(e)
+
+
+async def on_startup():
+    asyncio.create_task(scheduler())
+
+
 
 
 async def send_file(msg: Message):
