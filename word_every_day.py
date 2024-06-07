@@ -109,14 +109,15 @@ async def send_text_test(message: Message):
 
 
 async def scheduler():
-    aioschedule.every().day.at("17:45").do(send_text_test1)
+    # aioschedule.every().day.at("17:45").do(send_text_test1)
+    aioschedule.every(3).seconds.do(send_text_test1)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
 
-async def send_text_test1(message: Message):
+async def send_text_test1(message: Message=None):
     try:
-        print(message.model_dump_json(indent=4, exclude_none=True))
+        # print(message.model_dump_json(indent=4, exclude_none=True))
         phrase = next(shuffle(text))
         # await message.answer(text=f"Сообщение отправлено.")отправлено
         await message.answer(text=phrase)
@@ -179,9 +180,9 @@ async def send_photo_test(message: Message):
 async def delete_webhook_and_handle_updates():
     # Удаление вебхука
     await bot.delete_webhook(drop_pending_updates=True)
-
+    await on_startup(bot)
     # Начало обработки обновлений через периодический опрос
-    await dp.start_polling(bot)
+    await dp.start_polling(bot, on_startup=on_startup)
 
 
 # Запуск асинхронной функции
