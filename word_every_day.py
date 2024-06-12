@@ -79,12 +79,6 @@ class SchedulerMiddleware(BaseMiddleware):
         return await handler(event, data)
 
 
-# Этот хэндлер будет срабатывать на команду "/help"
-@dp.message(Command(commands=["help"]))
-async def process_start_command(message: Message):
-    await message.answer('Начни предложение/подпись фото с "!" чтобы отправить его в др группу.\n ')
-
-
 @dp.message(F.text.lower().startswith(("й", 'q', 'cat', "кот")))
 async def send_echo_cat(message: Message):
     try:
@@ -99,18 +93,6 @@ async def send_echo_cat(message: Message):
         else:
             await message.answer(text=ERROR_TEXT)
             # requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={message.chat.id}&text={ERROR_TEXT}')
-    except Exception as e:
-        logging.exception(e)
-
-
-@dp.message(F.text.startswith("!"), lambda msg: len(msg.text) > 1)
-async def send_text_test(message: Message):
-    try:
-        print(message.model_dump_json(indent=4, exclude_none=True))
-        for name, chat_id in test_chats.items():
-            if not chat_id == message.chat.id:
-                await bot.send_message(chat_id=chat_id, text=message.text[1:])
-        await message.answer(text=f"Сообщение отправлено.")
     except Exception as e:
         logging.exception(e)
 
@@ -148,52 +130,6 @@ async def on_startup():
     asyncio.create_task(scheduler())
 
 
-async def send_file(msg: Message):
-    for chat_name, chat_id in test_chats.items():
-        if not chat_id == msg.chat.id:
-            await msg.copy_to(chat_id=chat_id)
-    await msg.answer(text=f"Файл отправлен.")
-
-
-@dp.message(F.photo | F.document)
-async def send_photo_test(message: Message):
-    try:
-        if message.caption and message.caption.startswith('!'):
-            date_of_caption['date'] = message.date
-            await send_file(message)
-
-        elif date_of_caption['date'] == message.date:
-            await send_file(message)
-
-    except Exception as e:
-        logging.exception(e)
-
-
-# @dp.message(F.photo | F.document)
-# async def send_photo_test(message: Message):
-#     try:
-#         # print()
-#         # print(message.model_dump_json(indent=4, exclude_none=True))
-#         print(message.caption, type(message.caption))
-#         print(message.message_id)
-#         print('eto date of caption: ', date_of_caption['date'])
-#         print('eto message date: ', message.date)
-#         print()
-#         print('Step without caption: ', date_of_caption['date'])
-#         print('Step without caption: ', date_of_caption['date'] == message.date)
-#         print('Eto update_id: ', message.message_id)
-#
-#         if date_of_caption['date'] == message.date:
-#             for chat_name, chat_id in test_chats.items():
-#                 if not chat_id == message.chat.id:
-#                     await message.copy_to(chat_id=chat_id)
-#                     print('!!!')
-#             await message.answer(text=f"Файл отправлен.")
-#
-#     except Exception as e:
-#         logging.exception(e)
-
-
 async def delete_webhook_and_handle_updates():
     # Удаление вебхука
     await bot.delete_webhook(drop_pending_updates=True)
@@ -207,13 +143,15 @@ async def main() -> None:
     bot = Bot(BOT_TOKEN)
     # And the run events dispatching
     scheduler = AsyncIOScheduler()
-    timezone="Europe/Moscow"
+    timezone = "Europe/Moscow"
 
     dp.update.middleware(
         SchedulerMiddleware(scheduler=scheduler),
     )
     scheduler.start()
+    # await on_startup()
     await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
