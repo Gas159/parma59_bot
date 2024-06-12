@@ -123,6 +123,7 @@ print(lines)
 
 text = [i.strip() for i in lines if i.strip()]
 # pprint(text)
+print(len(lines))
 
 # import asyncio
 # import aioschedule
