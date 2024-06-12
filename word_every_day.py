@@ -58,10 +58,10 @@ Literal - от английского "literally", то есть "букваль
 Да уж , тут не до веселья , когда дед Егор, прогуливая уроки и сколопендру - нечаяно получил получку и рекошетом в лоб !!! "Да, все устраивает" !!! - подумали соседи и не стали делать ему поп-корн  !!!! Простите , специи в плове нынче - ТЕ!!!!!
 '''
 # print(q)
-lines = q.split('\n')
+# lines = text.split('\n')
 # print(lines)
 
-text = [i.strip('') for i in lines if i.strip()]
+# text = [i.strip('') for i in lines if i.strip()]
 
 
 # Add middleware Scheduler

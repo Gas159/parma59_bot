@@ -59,10 +59,8 @@ Literal - от английского "literally", то есть "букваль
 lines = q.split('\n')
 # print(lines)
 
-text = [ i.strip('') for i in lines if i.strip()]
-pprint(text)
-
-
+text = [i.strip('') for i in lines if i.strip()]
+# pprint(text)
 
 # import asyncio
 # import aioschedule
