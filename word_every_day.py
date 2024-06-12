@@ -44,6 +44,7 @@ def shuffle(lst):
         yield i
 
 
+gen = shuffle(text)
 date_of_caption = {'date': ''}
 
 q = '''
@@ -57,6 +58,8 @@ Literal - от английского "literally", то есть "букваль
 
 Да уж , тут не до веселья , когда дед Егор, прогуливая уроки и сколопендру - нечаяно получил получку и рекошетом в лоб !!! "Да, все устраивает" !!! - подумали соседи и не стали делать ему поп-корн  !!!! Простите , специи в плове нынче - ТЕ!!!!!
 '''
+
+
 # print(q)
 # lines = text.split('\n')
 # print(lines)
@@ -102,7 +105,7 @@ async def send_echo_cat(message: Message):
 async def send_text_test(message: Message):
     try:
         print(message.model_dump_json(indent=4, exclude_none=True))
-        phrase = next(shuffle(text))
+        phrase = next(gen)
         print(type(phrase), phrase)
         # await message.answer(text=f"Сообщение отправлено.")отправлено
         await message.answer(text=phrase)
@@ -110,16 +113,16 @@ async def send_text_test(message: Message):
         logging.exception(e)
 
 
-async def send_text_test1():
-    try:
-        # print(message.model_dump_json(indent=4, exclude_none=True))
-        phrase = next(shuffle(text))
-        # await message.answer(text=f"Сообщение отправлено.")отправлено
-        # await message.answer(text=phrase)
-        print(phrase)
-        return phrase
-    except Exception as e:
-        logging.exception(e)
+# async def send_text_test1():
+#     try:
+#         # print(message.model_dump_json(indent=4, exclude_none=True))
+#         phrase = next(shuffle(text))
+#         # await message.answer(text=f"Сообщение отправлено.")отправлено
+#         # await message.answer(text=phrase)
+#         print(phrase)
+#         return phrase
+#     except Exception as e:
+#         logging.exception(e)
 
 
 async def delete_webhook_and_handle_updates():
@@ -153,7 +156,9 @@ async def delete_webhook_and_handle_updates():
 async def send_message(bot: Bot, user_id: int):
     """Функция для отправки сообщения пользователю."""
     try:
-        phrase = next(shuffle(text))
+        # phrase = next(shuffle(text))
+        # print(type(phrase), phrase)
+        phrase = next(gen)
         print(type(phrase), phrase)
         await bot.send_message(chat_id=user_id, text=phrase)
         logging.info("Message sent successfully")
@@ -171,15 +176,15 @@ async def main() -> None:
     scheduler = AsyncIOScheduler()
     timezone = "Europe/Moscow"
 
-    scheduler.add_job(send_message, trigger="interval", seconds=3, start_date=datetime.now(), kwargs={
+    scheduler.add_job(send_message, trigger="interval", hours=3, seconds=5, start_date=datetime.now(), kwargs={
         "bot": bot,
         # "message": next(shuffle(text)),
         # 'message': 'opo',
         # "user_id": ,
+        # 'text': next(shuffle(text)),
         "user_id": -4161841389
     }, )
     scheduler.start()
-
     await dp.start_polling(bot)
 
 
