@@ -176,7 +176,7 @@ async def main() -> None:
     scheduler = AsyncIOScheduler()
     timezone = "Europe/Moscow"
 
-    scheduler.add_job(send_message, trigger="interval", seconds=5, start_date=datetime.now(), kwargs={
+    scheduler.add_job(send_message, trigger="interval", hours=3, seconds=5, start_date=datetime.now(), kwargs={
         "bot": bot,
         # "message": next(shuffle(text)),
         # 'message': 'opo',
