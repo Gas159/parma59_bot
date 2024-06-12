@@ -10,7 +10,7 @@ from aiogram import F
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  # take environment variables from .env.
+load_dotenv()  # йtake environment variables from .env.
 
 # Вместо BOT TOKEN HERE нужно вставить токен вашего бота,, полученный у @BotFather
 BOT_TOKEN: str = os.getenv('BOT_TOKEN')
@@ -20,7 +20,7 @@ dp: Dispatcher = Dispatcher()
 logging.basicConfig(level=logging.INFO)
 API_CATS_URL = 'https://api.thecatapi.com/v1/images/search'
 API_URL = 'https://api.telegram.org/bot'
-ERROR_TEXT = 'Здесь должна была быть картинка с котиком :('
+ERROR_TEXT = '1Здесь должна была быть картинка с котиком1 :('
 
 list_of_chats: dict[str, int] = {'pdd': -1002097028485,
                                  'parma': -1002020818544}
