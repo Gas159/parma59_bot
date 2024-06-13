@@ -1,3 +1,4 @@
+import datetime
 from pprint import pprint
 
 q = '''
@@ -125,24 +126,17 @@ text = [i.strip() for i in lines if i.strip()]
 # pprint(text)
 print(len(lines))
 
-# import asyncio
-# import aioschedule
-#
-#
-# @dp.message_handler()
-# async def choose_your_dinner():
-#     for user in set(the_users_without_dinner()):
-#         await bot.send_message(chat_id=user, text="Хей🖖 не забудь выбрать свой ужин сегодня
-#         ", reply_markup = menu_garnish)
-#
-#         async def scheduler():
-#             aioschedule.every().day.at("17:45").do(choose_your_dinner)
-#         while True:
-#             await aioschedule.run_pending()
-#             await asyncio.sleep(1)
-#
-#     async def on_startup(dp):
-#         asyncio.create_task(scheduler())
-#
-#     if __name__ == '__main__':
-#         executor.start_polling(on_startup=on_startup)
+from datetime import datetime, timedelta
+
+# Получить текущую дату и время
+current_datetime = datetime.now()
+
+# Установить время на 11 вечера от текущего дня
+target_time = current_datetime.replace(hour=23, minute=0, second=0, microsecond=0)
+
+# Если текущее время уже позднее 23:00, добавить один день
+if current_datetime.hour >= 23:
+    target_time += timedelta(days=1)
+
+print("Текущее время:", current_datetime)
+print("Целевое время (11 вечера):", target_time)

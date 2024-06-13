@@ -45,42 +45,8 @@ def shuffle(lst):
 
 
 gen = shuffle(text)
-date_of_caption = {'date': ''}
 
-q = '''
-Контекстный менеджер в Python - это объект, который определяет вход и выход из контекста с помощью методов enter() и exit().
-
-Literal - от английского "literally", то есть "буквально".
-
-Метаклассы - это классы, которые определяют поведение других классов.
-
-Ктотофлоу, канбан, эджайл --> скрам -- методология косанды, покер планиров
-
-Да уж , тут не до веселья , когда дед Егор, прогуливая уроки и сколопендру - нечаяно получил получку и рекошетом в лоб !!! "Да, все устраивает" !!! - подумали соседи и не стали делать ему поп-корн  !!!! Простите , специи в плове нынче - ТЕ!!!!!
-'''
-
-
-# print(q)
-# lines = text.split('\n')
-# print(lines)
-
-# text = [i.strip('') for i in lines if i.strip()]
-
-
-# Add middleware Scheduler
-# class SchedulerMiddleware(BaseMiddleware):
-#     def __init__(self, scheduler: AsyncIOScheduler):
-#         self.scheduler = scheduler
-#
-#     async def __call__(
-#             self,
-#             handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
-#             event: TelegramObject,
-#             data: Dict[str, Any],
-#     ) -> Any:
-#         # add apscheduler to data
-#         data["apscheduler"] = self.scheduler
-#         return await handler(event, data)
+pluses = {}
 
 
 @dp.message(F.text.lower().startswith(("й", 'q', 'cat', "кот")))
@@ -97,6 +63,17 @@ async def send_echo_cat(message: Message):
         else:
             await message.answer(text=ERROR_TEXT)
             # requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={message.chat.id}&text={ERROR_TEXT}')
+    except Exception as e:
+        logging.exception(e)
+
+
+# send "ahtung" if not plus every day
+@dp.message(F.text.lower().startswith(("+")))
+async def send_msg(message: Message):
+    try:
+        print(message.model_dump_json(indent=4, exclude_none=True))
+        pluses[message.chat.id] = message.text
+        print(pluses)
     except Exception as e:
         logging.exception(e)
 
@@ -176,7 +153,7 @@ async def main() -> None:
     scheduler = AsyncIOScheduler()
     timezone = "Europe/Moscow"
 
-    scheduler.add_job(send_message, trigger="interval", hours=3, seconds=5, start_date=datetime.now(), kwargs={
+    scheduler.add_job(send_message, trigger="interval", hours=12, seconds=5, start_date=datetime.now(), kwargs={
         "bot": bot,
         # "message": next(shuffle(text)),
         # 'message': 'opo',
