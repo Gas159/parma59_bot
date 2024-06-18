@@ -52,7 +52,10 @@ pluses = {
             'chat_id': -4155526550},
     'Полина': {'user_id': 5150369451,
                'msg': None,
-               'chat_id': None}
+               'chat_id': None},
+    'Влад': {'user_id': 2082981840,
+             'msg': None,
+             'chat_id': None}
 }
 
 
@@ -86,7 +89,7 @@ async def send_msg(message: Message):
                 pluses[user]['user_id'] = message.from_user.id
                 pluses[user]['chat_id'] = message.chat.id
         print(pluses)
-        await bot.send_message(chat_id=message.chat.id, text='Check of "+"')
+        await bot.send_message(chat_id=-4155526550, text='Check of "+"')
     except Exception as e:
         logging.exception(dp.message(F.text.lower().startswith(("+"))))
 
@@ -102,7 +105,7 @@ async def send_msg_if_not_plus(bot: Bot):
                 await bot.send_message(chat_id=-4155526550, text=f'{user} плюс поставь!')
 
                 # send msg tp test_plus
-                await bot.send_message(chat_id=-4213163596, text=f'{user} Плюс поставь!')
+                # await bot.send_message(chat_id=-4213163596, text=f'{user} Плюс поставь!')
 
             # pluses[user]['msg'] = None
 
@@ -117,7 +120,7 @@ async def send_msg_if_not_plus(bot: Bot):
 async def delete_plus(bot: Bot):
     for user in pluses:
         pluses[user]['msg'] = None
-        await bot.send_message(chat_id=-4155526550, text='Plus was delete')
+    await bot.send_message(chat_id=-4155526550, text='Plus was delete')
 
 
 @dp.message(F.text.startswith("1"))  # lambda msg: len(msg.text) > 1
@@ -168,13 +171,13 @@ async def main() -> None:
     #     "bot": bot,
     # })
 
-    scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour='7,15,16,17,18,19,20,21,22,23', minute=30, kwargs={
+    scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour='7,21,22,23', minute=30, kwargs={
         "bot": bot,
     }, )
     scheduler.add_job(delete_plus, trigger="cron", hour=23, minute=50, kwargs={
         "bot": bot,
     }, )
-    print(datetime.now())
+    # print(datetime.now())
 
     scheduler.start()
     logging.debug(scheduler)
