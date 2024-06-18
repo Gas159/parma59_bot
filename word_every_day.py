@@ -106,13 +106,6 @@ async def send_msg_if_not_plus(bot: Bot):
 
                 # send msg tp test_plus
                 # await bot.send_message(chat_id=-4213163596, text=f'{user} Плюс поставь!')
-
-            # pluses[user]['msg'] = None
-
-            # if user == message.from_user.first_name:
-            #     pluses[user]['msg'] = message.text
-            #     pluses[user]['chat'] = message.chat.id
-        print(pluses)
     except Exception as e:
         logging.exception(e)
 
