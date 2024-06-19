@@ -2,7 +2,8 @@ import asyncio
 import logging
 import random
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
+from pytz import timezone
 from typing import Callable, Dict, Any, Awaitable
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -146,8 +147,11 @@ async def get_id(message: Message):
 async def main() -> None:
 	# Удаление вебхука
 	await bot.delete_webhook(drop_pending_updates=True)
-	scheduler = AsyncIOScheduler()
-	timezone = "Europe/Moscow"
+	#
+	# time_zone = timezone("Europe/Moscow")
+	# current_timezone = time_zone + timedelta(hours=2)
+	# print(current_timezone)
+	scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
 
 	scheduler.add_job(send_message, trigger="interval", hours=12, seconds=5, start_date=datetime.now(), kwargs={
 		"bot": bot,

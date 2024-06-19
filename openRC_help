@@ -1,3 +1,5 @@
+#Проверка сервера постгрес  
+systemctl status postgresql
 
 # Проверка отказавших служб.
 rc-status --crashed
@@ -27,7 +29,7 @@ tmux new -s telegram_bot_session
 tmux ls
 tmux list-sessions
 C-b w
-
+rm -rf ~/.poetry
 
 #detach
 tmux ctrl + b --> d
