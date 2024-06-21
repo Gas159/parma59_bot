@@ -10,7 +10,7 @@ from aiogram import F
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  # йtake environment variables from .env.
+load_dotenv()  # йнtake environment variables from .env.
 
 # Вместо BOT TOKEN HERE нужно вставить токен вашего бота,, полученный у @BotFather
 BOT_TOKEN: str = os.getenv('BOT_TOKEN')
