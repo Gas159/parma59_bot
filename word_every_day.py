@@ -2,20 +2,17 @@ import asyncio
 import logging
 import random
 import sys
-from datetime import datetime, timedelta
-from pytz import timezone
-from typing import Callable, Dict, Any, Awaitable
+from datetime import datetime
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import requests
-from aiogram import Bot, Dispatcher, BaseMiddleware
-from aiogram.filters import Command
-from aiogram.types import Message, TelegramObject, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram import Bot, Dispatcher
+from aiogram.types import Message
 from aiogram import F
 
 from dotenv import load_dotenv
 import os
-from test1 import text
+from sevices.test1 import text
 
 load_dotenv()  # take environment variables from .env.
 
