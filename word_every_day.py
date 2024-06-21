@@ -123,7 +123,7 @@ async def send_text_test(message: Message):
 		logging.exception(e)
 
 
-async def send_message(bot: Bot, user_id: int):
+async def send_message1(bot: Bot, user_id: int):
 	"""Функция для отправки сообщения пользователю."""
 	try:
 
@@ -147,13 +147,14 @@ async def get_id(message: Message):
 async def main() -> None:
 	# Удаление вебхука
 	await bot.delete_webhook(drop_pending_updates=True)
+
 	#
 	# time_zone = timezone("Europe/Moscow")
 	# current_timezone = time_zone + timedelta(hours=2)
 	# print(current_timezone)
 	scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
 
-	scheduler.add_job(send_message, trigger="interval", hours=12, seconds=5, start_date=datetime.now(), kwargs={
+	scheduler.add_job(send_message1, trigger="interval", hours=12, seconds=5, start_date=datetime.now(), kwargs={
 		"bot": bot,
 		"user_id": -4161841389
 	}, )
