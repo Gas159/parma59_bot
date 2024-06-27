@@ -1,29 +1,39 @@
 import psycopg2
+# improt from .env
+from dotenv import load_dotenv
+import os
 
-# Подключение к базе данных
-conn = psycopg2.connect(
-	dbname="testdb",
-	user="testuser",
-	password="123",
-	host="localhost"
-)
-print(conn)
-# Создание курсора
-cur = conn.cursor()
+load_dotenv()  # take environment variables from .env.
+DB_NAME= os.getenv('DB_NAME')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST')
+# BOT_TOKEN: str = os.getenv('BOT_TOKEN')
 
-# Создание новой записи
-cur.execute("INSERT INTO users (name, age) VALUES (%s, %s)", ("value1", 32))
-
-# Фиксация изменений
-conn.commit()
-
-#view data
-cur.execute("SELECT * FROM users")
-rows = cur.fetchall()
-for row in rows:
-    print(row)
+def main():
+	# Подключение к базе данных
+	conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST)
 
 
-# Закрытие курсора и соединения
-cur.close()
-conn.close()
+	print(conn)
+	# Создание курсора
+	cur = conn.cursor()
+
+	# Создание новой записи
+	cur.execute("INSERT INTO users (name, age) VALUES (%s, %s)", ("value1", 32))
+
+	# Фиксация изменений
+	conn.commit()
+
+	# view data
+	cur.execute("SELECT * FROM users")
+	rows = cur.fetchall()
+	for row in rows:
+		print(row)
+
+	# Закрытие курсора и соединения
+	cur.close()
+	conn.close()
+
+if __name__ == '__main__':
+	main()
