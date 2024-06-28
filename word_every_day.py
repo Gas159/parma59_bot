@@ -140,9 +140,9 @@ async def main() -> None:
 	# time_zone = timezone("Europe/Moscow")
 	# current_timezone = time_zone + timedelta(hours=2)
 	# print(current_timezone)
-	scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
+	scheduler = AsyncIOScheduler(timezone='Etc/GMT+5')
 
-	scheduler.add_job(send_message1, trigger="interval", hours=12, seconds=5, start_date=datetime.now(), kwargs={
+	sdd_job(send_message1, trigger="interval", hours=12, seconds=5, start_date=datetime.now(), kwargs={
 		"bot": bot,
 		"user_id": -4161841389
 	}, )
