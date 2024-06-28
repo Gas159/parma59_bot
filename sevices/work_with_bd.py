@@ -1,3 +1,5 @@
+import random
+
 import psycopg2
 from dotenv import load_dotenv
 import os
@@ -17,6 +19,10 @@ def get_text(file_path: str) -> list[str]:
 		lst = [item.strip() for item in text.split('\n\n') if item.strip()]
 		# print(lst)
 		return lst
+
+def shuffle(string: list):
+	random.shuffle(string)
+	return string
 
 
 def connect_to_db() -> None:
@@ -39,7 +45,7 @@ def add_records_to_db_from_file(user_name: str = 'Gas') -> None:
 		print(f'Error: {e}')
 
 
-def add_record_to_db(record: str='Default', user_name: str = 'Gas') -> None:
+def add_record_to_db(record: str = 'Default', user_name: str = 'Gas') -> None:
 	try:
 		conn = connect_to_db()
 		with conn.cursor() as cur:
@@ -79,16 +85,14 @@ def select_id_from_db() -> list:
 		with conn.cursor() as cur:
 			cur.execute("select id from quotes")
 			ids = cur.fetchall()
-			# print(ids)
-			# print(type(ids), ids)
 			ids_clear = []
-			for id in ids:
-				# print(type( id ),   *id)
-				ids_clear.append(*id)
-			print(ids_clear)
+			for _id in ids:
+				ids_clear.append(*_id)
+			shuffle(ids_clear)
 			return ids_clear
 	except psycopg2.Error as e:
 		print(f'Error: {e}')
+
 
 
 if __name__ == '__main__':
@@ -96,4 +100,4 @@ if __name__ == '__main__':
 	add_record_to_db()
 	# select_all_from_db()
 	select_id_from_db()
-	# add_records_to_db_from_file('test_record')
+# add_records_to_db_from_file('test_record')
