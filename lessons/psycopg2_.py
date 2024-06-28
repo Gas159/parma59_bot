@@ -19,8 +19,9 @@ def main():
 			print(conn)
 			# Create a cursor
 			with conn.cursor() as cur:
+				q = 1
 				# Create a new record
-				cur.execute("INSERT INTO users (name, age) VALUES (%s, %s)", ("value1", 32))
+				cur.execute("INSERT INTO users (name, age) VALUES (%s, %s)", ("value1",q))
 
 				# Commit the changes
 				conn.commit()

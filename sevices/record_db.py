@@ -1,7 +1,7 @@
 import psycopg2
 from dotenv import load_dotenv
 import os
-from .files
+
 
 load_dotenv()  # take environment variables from .env
 DB_NAME = os.getenv('DB_NAME')

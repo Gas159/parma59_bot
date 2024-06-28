@@ -10,6 +10,8 @@ def generic_get_quote(file_path: str) -> Generator[str, None, None]:
 		for item in shuffle(clear_text):
 			yield item
 
+def get_quote_from_bd():
+
 
 def shuffle(string: list):
 	random.shuffle(string)

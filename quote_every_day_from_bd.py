@@ -142,7 +142,7 @@ async def main() -> None:
 	# print(current_timezone)
 	scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
 
-	scheduler.add_job(send_message1, trigger="interval", hours=12, seconds=5, start_date=datetime.now(), kwargs={
+	scheduler.add_job(send_message1, trigger="interval", hours=16, seconds=5, start_date=datetime.now(), kwargs={
 		"bot": bot,
 		"user_id": -4161841389
 	}, )
@@ -151,7 +151,7 @@ async def main() -> None:
 	#     "bot": bot,
 	# })
 
-	scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour='7,21,22,23', minute=30, kwargs={
+	scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour='20', minute=30, kwargs={
 		"bot": bot,
 	}, )
 	scheduler.add_job(delete_plus, trigger="cron", hour=23, minute=50, kwargs={
