@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import random
 import sys
 from datetime import datetime
 
@@ -12,7 +11,8 @@ from aiogram import F
 
 from dotenv import load_dotenv
 import os
-from sevices.test1 import text
+
+from sevices.get_quote import get_quote
 
 load_dotenv()  # take environment variables from .env.
 
@@ -34,15 +34,6 @@ test_chats: dict[str, int] = {'test_1': -4161841389,
                               'test_plus': -4213163596}
 
 list_of_records = ['1', '2', '3', '4', '5']
-
-
-def shuffle(lst):
-	random.shuffle(lst)
-	for i in lst:
-		yield i
-
-
-gen = shuffle(text)
 
 pluses = {
 	'Гас': {'user_id': 1363407847, 'msg': None, 'chat_id': -4155526550},
@@ -112,7 +103,7 @@ async def delete_plus(bot: Bot):
 async def send_text_test(message: Message):
 	try:
 		print(message.model_dump_json(indent=4, exclude_none=True))
-		phrase = next(gen)
+		phrase = next(get_quote)
 		print(type(phrase), phrase)
 		# await message.answer(text=f"Сообщение отправлено.")отправлено
 		await message.answer(text=phrase)

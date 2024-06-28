@@ -1,26 +1,25 @@
 import psycopg2
-# improt from .env
 from dotenv import load_dotenv
 import os
+from .files
 
-load_dotenv()  # take environment variables from .env.
+load_dotenv()  # take environment variables from .env
 DB_NAME = os.getenv('DB_NAME')
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 DB_HOST = os.getenv('DB_HOST')
 
-
-# BOT_TOKEN: str = os.getenv('BOT_TOKEN')
-
-def main():
+def add_record_db(user_name: str, lst:list[str])-> None:
 	# Connect to the database
 	try:
 		with psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST) as conn:
 			print(conn)
 			# Create a cursor
 			with conn.cursor() as cur:
-				# Create a new record
-				cur.execute("INSERT INTO users (name, age) VALUES (%s, %s)", ("value1", 32))
+				for record in lst:
+					cur.execute("INSERT INTO users (user_name, quote ) VALUES (user_name, record)")
+				# # Create a new record
+				# cur.execute("INSERT INTO users (name, age) VALUES (%s, %s)", ("value1", 32))
 
 				# Commit the changes
 				conn.commit()
@@ -58,5 +57,4 @@ def main():
 		# 	cur.close()
 		# 	conn.close()
 
-if __name__ == '__main__':
-	main()
+add_record_db()
