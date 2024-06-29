@@ -23,7 +23,7 @@ rc-update add "myservice" default
 
 pkill -f /root/parma_bot/parma59_bot/.venv/bin/python3
 
-
+'Asia/Yekaterinburg'
 tmux new -s telegram_bot_session
 
 tmux ls
