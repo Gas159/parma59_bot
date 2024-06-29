@@ -31,7 +31,8 @@ list_of_chats: dict[str, int] = {'pdd': -1002097028485,
 
 test_chats: dict[str, int] = {'test_1': -4161841389,
                               'test_2': -4155526550,
-                              'test_plus': -4213163596}
+                              'test_plus': -4213163596,
+                              'need_to_pump_up': -4231461902}
 
 list_of_records = ['1', '2', '3', '4', '5']
 
@@ -61,7 +62,7 @@ async def send_echo_cat(message: Message):
 
 
 # send "ahtung" if not plus every day
-@dp.message(F.text.lower().startswith(("+")))
+@dp.message(F.text.lower().startswith("+"))
 async def send_msg(message: Message):
 	try:
 		# print(message.model_dump_json(indent=4, exclude_none=True))
@@ -74,10 +75,10 @@ async def send_msg(message: Message):
 		print(pluses)
 		await bot.send_message(chat_id=-4155526550, text='Check of "+"')
 	except Exception as e:
-		logging.exception(dp.message(F.text.lower().startswith(("+"))))
+		logging.exception(e)
 
 
-async def send_msg_if_not_plus(bot: Bot):
+async def send_msg_if_not_plus():
 	try:
 		# print(message.model_dump_json(indent=4, exclude_none=True))
 		for user in pluses:
@@ -86,14 +87,11 @@ async def send_msg_if_not_plus(bot: Bot):
 			if not pluses[user]['msg']:
 				# send msg tp test2
 				await bot.send_message(chat_id=-4155526550, text=f'{user} плюс поставь!')
-
-	# send msg tp test_plus
-	# await bot.send_message(chat_id=-4213163596, text=f'{user} Плюс поставь!')
 	except Exception as e:
 		logging.exception(e)
 
 
-async def delete_plus(bot: Bot):
+async def delete_plus():
 	for user in pluses:
 		pluses[user]['msg'] = None
 	await bot.send_message(chat_id=-4155526550, text='Plus was delete')
@@ -111,13 +109,13 @@ async def send_text_test(message: Message):
 		logging.exception(e)
 
 
-async def send_message1(bot: Bot, user_id: int):
+async def send_message1(chat_id: int):
 	"""Функция для отправки сообщения пользователю."""
 	try:
 
 		phrase = next(get_quote)
 		print(type(phrase), phrase)
-		await bot.send_message(chat_id=user_id, text=phrase)
+		await bot.send_message(chat_id=chat_id, text=phrase)
 		logging.info("Message sent successfully")
 	except Exception as e:
 		logging.error(f"Error sending message: {e}")
@@ -143,8 +141,9 @@ async def main() -> None:
 	scheduler = AsyncIOScheduler(timezone='Etc/GMT+5')
 
 	scheduler.add_job(send_message1, trigger="interval", hours=12, seconds=5, start_date=datetime.now(), kwargs={
-		"bot": bot,
-		"user_id": -4161841389
+		# "bot": bot,
+		# "chat_id": -4161841389
+		'chat_id': test_chats['need_to_pump_up']
 	}, )
 
 	# scheduler.add_job(send_msg_if_not_plus, trigger="interval", seconds=10, start_date=datetime.now(), kwargs={
@@ -152,10 +151,10 @@ async def main() -> None:
 	# })
 
 	scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour='21,22,23', minute=30, kwargs={
-		"bot": bot,
+		# "bot": bot,
 	}, )
 	scheduler.add_job(delete_plus, trigger="cron", hour=23, minute=50, kwargs={
-		"bot": bot,
+		# "bot": bot,
 	}, )
 	# print(datetime.now())
 

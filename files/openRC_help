@@ -36,6 +36,10 @@ tmux ctrl + b --> d
 
 tmux attach -t telegram_bot_session
 
+pull-up
+push ups
+pump up
+
 Create a new window within a tmux session: Press Ctrl+b, then c.
 
 Switch between tmux windows: Press Ctrl+b, then the window number.
