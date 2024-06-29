@@ -150,7 +150,7 @@ async def main() -> None:
 	#     "bot": bot,
 	# })
 
-	scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour='21,22,23', minute=30, kwargs={
+	scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour='10,11,21,22,23', minute=30, kwargs={
 		# "bot": bot,
 	}, )
 	scheduler.add_job(delete_plus, trigger="cron", hour=23, minute=50, kwargs={
