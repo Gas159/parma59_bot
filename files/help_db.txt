@@ -1,0 +1,1 @@
+TRUNCATE TABLE tbl RESTART IDENTITY; # обновляет автоинкремент

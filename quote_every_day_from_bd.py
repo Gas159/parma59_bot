@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 import os
 
 from sevices.get_quote_from_file import get_quote
-from work_with_db.work_with_bd import select_random_queto_from_db
+from work_with_db.work_with_bd import select_random_quote_from_db, add_record_to_db, get_quote_from_db
 
 load_dotenv()  # take environment variables from .env1.
 
@@ -76,7 +76,7 @@ async def send_msg(message: Message):
 		print(pluses)
 		await bot.send_message(chat_id=-4155526550, text='Check of "+"')
 	except Exception as e:
-		logging.exception(dp.message(F.text.lower().startswith(("+"))))
+		logging.exception(e)
 
 
 async def send_msg_if_not_plus(bot: Bot):
@@ -87,7 +87,9 @@ async def send_msg_if_not_plus(bot: Bot):
 			print(pluses)
 			if not pluses[user]['msg']:
 				# send msg tp test2
-				await bot.send_message(chat_id=-4155526550, text=f'{user} плюс поставь!')
+				current_time = datetime.now().strftime("%H:%M:%S")
+				await bot.send_message(chat_id=-4155526550, text=f'{user} плюс поставь! at {current_time}.\nmy set '
+				                                                 f'time is 10:30:00')
 
 	# send msg tp test_plus
 	# await bot.send_message(chat_id=-4213163596, text=f'{user} Плюс поставь!')
@@ -99,7 +101,7 @@ async def delete_plus(bot: Bot):
 	for user in pluses:
 		pluses[user]['msg'] = None
 	current_time = datetime.now().strftime("%H:%M:%S")
-	await bot.send_message(chat_id=-4155526550, text=f'Plus was delete at {current_time}. my set time is 23:50:00')
+	await bot.send_message(chat_id=-4155526550, text=f'Plus was delete at {current_time}.\n my set time is 23:50:00')
 
 
 @dp.message(F.text.startswith("1"))  # lambda msg: len(msg.text) > 1
@@ -107,7 +109,7 @@ async def send_text_test(message: Message):
 	try:
 		# print(message.model_dump_json(indent=4, exclude_none=True))
 		# phrase = next(get_quote)
-		phrase = select_random_queto_from_db()
+		phrase = select_random_quote_from_db()
 		print(type(phrase), phrase)
 		# await message.answer(text=f"Сообщение отправлено.")отправлено
 		await message.answer(text=phrase)
@@ -119,7 +121,7 @@ async def send_message(bot: Bot, chat_id: int):
 	"""Функция для отправки сообщения пользователю."""
 	try:
 
-		phrase = next(get_quote)
+		phrase = select_random_quote_from_db()
 		print(type(phrase), phrase)
 		await bot.send_message(chat_id=chat_id, text=phrase)
 		logging.info("Message sent successfully")
@@ -127,9 +129,29 @@ async def send_message(bot: Bot, chat_id: int):
 		logging.error(f"Error sending message: {e}")
 
 
+@dp.message(F.text.startswith('add'))
+async def add_quote(message: Message):
+	user_id = message.from_user.id
+	chat_id = message.chat.id
+	user_name = message.from_user.first_name
+	quote = message.text.lstrip('add')
+	result = add_record_to_db(quote, user_name)
+
+	await message.answer(f"Record added.\nuser ID: {user_id}\nchat ID: {chat_id}\nname: {user_name}\nid_quote_in_bd:"
+	                     f" {result}")
+
+@dp.message(F.text.startswith('get'))
+async def get_quote(message: Message):
+	user_id = message.from_user.id
+	chat_id = message.chat.id
+	user_name = message.from_user.first_name
+	id_quote = message.text.lstrip('get')
+	result = get_quote_from_db(id_quote)
+
+	await message.answer(f"{result}")
+
 @dp.message(F.text.startswith('id'))
 async def get_id(message: Message):
-	print('111111111111111')
 	user_id = message.from_user.id
 	chat_id = message.chat.id
 	user_name = message.from_user.first_name

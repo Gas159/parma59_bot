@@ -11,6 +11,7 @@ def generic_get_quote(file_path: str) -> Generator[str, None, None]:
 			yield item
 
 def get_quote_from_bd():
+	pass
 
 
 def shuffle(string: list):
