@@ -14,7 +14,7 @@ import os
 
 from sevices.get_quote_from_file import get_quote
 
-load_dotenv()  # take environment variables from .env.
+load_dotenv()  # take environment variables from .env1.
 
 # Вместо BOT TOKEN HERE нужно вставить токен вашего бота, полученный у 1@BotFather
 BOT_TOKEN: str = os.getenv('BOT_TOKEN')
