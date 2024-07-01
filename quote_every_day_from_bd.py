@@ -3,6 +3,7 @@ import logging
 import sys
 from datetime import datetime
 
+import pytz
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import requests
 from aiogram import Bot, Dispatcher
@@ -141,7 +142,8 @@ async def main() -> None:
 	# time_zone = timezone("Europe/Moscow")
 	# current_timezone = time_zone + timedelta(hours=2)
 	# print(current_timezone)
-	scheduler = AsyncIOScheduler(timezone='Asia/Yekaterinburg')
+	# scheduler = AsyncIOScheduler(timezone='Asia/Yekaterinburg')
+	scheduler = AsyncIOScheduler(timezone=pytz.timezone('Asia/Yekaterinburg'))
 
 	scheduler.add_job(send_message1, trigger="interval", hours=24, seconds=5, start_date=datetime.now(), kwargs={
 		"bot": bot,
