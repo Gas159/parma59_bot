@@ -17,8 +17,9 @@ def get_text(file_path: str) -> list[str]:
 	with open(file_path, 'r') as file:
 		text = file.read()
 		lst = [item.strip() for item in text.split('\n\n') if item.strip()]
-		# print(lst)
+		print(lst)
 		return lst
+
 
 def shuffle(string: list):
 	random.shuffle(string)
@@ -85,19 +86,44 @@ def select_id_from_db() -> list:
 		with conn.cursor() as cur:
 			cur.execute("select id from quotes")
 			ids = cur.fetchall()
+
 			ids_clear = []
 			for _id in ids:
 				ids_clear.append(*_id)
 			shuffle(ids_clear)
+			print(ids_clear)
 			return ids_clear
 	except psycopg2.Error as e:
 		print(f'Error: {e}')
 
 
+def select_random_queto_from_db() -> None:
+	conn = connect_to_db()
+	try:
+		with conn.cursor() as cur:
+
+			cur.execute('select q.id, q.quote from quotes as q'
+			            ' left join used_quotes_id as uq on q.id = uq.used_id '
+			            'where uq.used_id is null '
+			            'order by random() limit 1')
+			rows = cur.fetchall()
+			print(rows)
+			print(rows[0][0], rows[0][1])
+			cur.execute("insert into used_quotes_id (used_id) values (%s)", (rows[0][0],))
+			conn.commit()
+			# cur.execute("INSERT INTO quotes (user_name, quote) VALUES (%s, %s)", (user_name, record))
+			# conn.commit()
+			# print(f' name: {rows[0][0]} quote: {rows[0][1]} id: {rows[0][2]}')
+			return '. '.join([str(rows[0][0]), rows[0][1]])
+
+	except psycopg2.Error as e:
+		print(f'Error1: {e}')
+
 
 if __name__ == '__main__':
 	# del_all_records_from_db()
-	add_record_to_db()
+	# add_record_to_db()
 	# select_all_from_db()
-	select_id_from_db()
-# add_records_to_db_from_file('test_record')
+	# select_id_from_db()
+	add_records_to_db_from_file('test_record')
+	# select_random_queto_from_db()

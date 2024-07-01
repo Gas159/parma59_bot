@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 import os
 
 from sevices.get_quote_from_file import get_quote
+from work_with_db.work_with_bd import select_random_queto_from_db
 
 load_dotenv()  # take environment variables from .env1.
 
@@ -104,8 +105,9 @@ async def delete_plus(bot: Bot):
 @dp.message(F.text.startswith("1"))  # lambda msg: len(msg.text) > 1
 async def send_text_test(message: Message):
 	try:
-		print(message.model_dump_json(indent=4, exclude_none=True))
-		phrase = next(get_quote)
+		# print(message.model_dump_json(indent=4, exclude_none=True))
+		# phrase = next(get_quote)
+		phrase = select_random_queto_from_db()
 		print(type(phrase), phrase)
 		# await message.answer(text=f"Сообщение отправлено.")отправлено
 		await message.answer(text=phrase)
@@ -113,13 +115,13 @@ async def send_text_test(message: Message):
 		logging.exception(e)
 
 
-async def send_message1(bot: Bot, user_id: int):
+async def send_message(bot: Bot, chat_id: int):
 	"""Функция для отправки сообщения пользователю."""
 	try:
 
 		phrase = next(get_quote)
 		print(type(phrase), phrase)
-		await bot.send_message(chat_id=user_id, text=phrase)
+		await bot.send_message(chat_id=chat_id, text=phrase)
 		logging.info("Message sent successfully")
 	except Exception as e:
 		logging.error(f"Error sending message: {e}")
@@ -138,16 +140,12 @@ async def main() -> None:
 	# Удаление вебхука
 	await bot.delete_webhook(drop_pending_updates=True)
 
-	#
-	# time_zone = timezone("Europe/Moscow")
-	# current_timezone = time_zone + timedelta(hours=2)
-	# print(current_timezone)
 	# scheduler = AsyncIOScheduler(timezone='Asia/Yekaterinburg')
 	scheduler = AsyncIOScheduler(timezone=pytz.timezone('Asia/Yekaterinburg'))
 
-	scheduler.add_job(send_message1, trigger="interval", hours=24, seconds=5, start_date=datetime.now(), kwargs={
+	scheduler.add_job(send_message, trigger="interval", hours=24, seconds=5, start_date=datetime.now(), kwargs={
 		"bot": bot,
-		"user_id": -4161841389
+		"chat_id": -4161841389
 	}, )
 
 	# scheduler.add_job(send_msg_if_not_plus, trigger="interval", seconds=10, start_date=datetime.now(), kwargs={
@@ -160,7 +158,6 @@ async def main() -> None:
 	scheduler.add_job(delete_plus, trigger="cron", hour=23, minute=50, kwargs={
 		"bot": bot,
 	}, )
-	# print(datetime.now())
 
 	scheduler.start()
 	logging.debug(scheduler)
