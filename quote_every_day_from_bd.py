@@ -96,7 +96,8 @@ async def send_msg_if_not_plus(bot: Bot):
 async def delete_plus(bot: Bot):
 	for user in pluses:
 		pluses[user]['msg'] = None
-	await bot.send_message(chat_id=-4155526550, text='Plus was delete')
+	current_time = datetime.now().strftime("%H:%M:%S")
+	await bot.send_message(chat_id=-4155526550, text=f'Plus was delete at {current_time}. my set time is 23:50:00')
 
 
 @dp.message(F.text.startswith("1"))  # lambda msg: len(msg.text) > 1
@@ -142,7 +143,7 @@ async def main() -> None:
 	# print(current_timezone)
 	scheduler = AsyncIOScheduler(timezone='Asia/Yekaterinburg')
 
-	scheduler.add_job(send_message1, trigger="interval", hours=16, seconds=5, start_date=datetime.now(), kwargs={
+	scheduler.add_job(send_message1, trigger="interval", hours=24, seconds=5, start_date=datetime.now(), kwargs={
 		"bot": bot,
 		"user_id": -4161841389
 	}, )
@@ -151,7 +152,7 @@ async def main() -> None:
 	#     "bot": bot,
 	# })
 
-	scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour='10', minute=30, kwargs={
+	scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour=10, minute=30, kwargs={
 		"bot": bot,
 	}, )
 	scheduler.add_job(delete_plus, trigger="cron", hour=23, minute=50, kwargs={
