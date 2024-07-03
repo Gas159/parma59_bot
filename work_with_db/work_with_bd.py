@@ -63,7 +63,7 @@ def add_records_to_db_from_file(user_name: str = 'Gas') -> None:
 		print(f'Error: {e}')
 
 
-def add_record_to_db(record: str = 'Default', user_name: str = 'Gas') -> None:
+def add_record_to_db(record: str = 'Default', user_name: str = 'Gas') -> tuple:
 	try:
 		conn = connect_to_db()
 		with conn.cursor() as cur:

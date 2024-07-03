@@ -13,7 +13,6 @@ from aiogram import F
 from dotenv import load_dotenv
 import os
 
-from sevices.get_quote_from_file import get_quote
 from work_with_db.work_with_bd import select_random_quote_from_db, add_record_to_db, get_quote_from_db
 
 load_dotenv()  # take environment variables from .env1.
@@ -63,7 +62,7 @@ async def send_echo_cat(message: Message):
 
 
 # send "ahtung" if not plus every day
-@dp.message(F.text.lower().startswith(("+")))
+@dp.message(F.text.lower().startswith("+"))
 async def send_msg(message: Message):
 	try:
 		# print(message.model_dump_json(indent=4, exclude_none=True))
@@ -92,7 +91,7 @@ async def send_msg_if_not_plus(bot: Bot):
 				                                                 f'time is 10:30:00')
 
 	# send msg tp test_plus
-	# await bot.send_message(chat_id=-4213163596, text=f'{user} Плюс поставь!')
+	# await bot.send_message(chat_id=-4213163596, text=f'{user} Плюс поставь!'
 	except Exception as e:
 		logging.exception(e)
 
@@ -140,15 +139,17 @@ async def add_quote(message: Message):
 	await message.answer(f"Record added.\nuser ID: {user_id}\nchat ID: {chat_id}\nname: {user_name}\nid_quote_in_bd:"
 	                     f" {result}")
 
+
 @dp.message(F.text.startswith('get'))
 async def get_quote(message: Message):
 	user_id = message.from_user.id
 	chat_id = message.chat.id
 	user_name = message.from_user.first_name
 	id_quote = message.text.lstrip('get')
-	result = get_quote_from_db(id_quote)
+	result = get_quote_from_db(int(id_quote))
 
 	await message.answer(f"{result}")
+
 
 @dp.message(F.text.startswith('id'))
 async def get_id(message: Message):
@@ -161,9 +162,10 @@ async def get_id(message: Message):
 async def main() -> None:
 	# Удаление вебхука
 	await bot.delete_webhook(drop_pending_updates=True)
-
+	timezone = pytz.timezone('Asia/Yekaterinburg')
+	print(timezone)
 	# scheduler = AsyncIOScheduler(timezone='Asia/Yekaterinburg')
-	scheduler = AsyncIOScheduler(timezone=pytz.timezone('Asia/Yekaterinburg'))
+	scheduler = AsyncIOScheduler(timezone=timezone)
 
 	scheduler.add_job(send_message, trigger="interval", hours=24, seconds=5, start_date=datetime.now(), kwargs={
 		"bot": bot,
@@ -174,10 +176,10 @@ async def main() -> None:
 	#     "bot": bot,
 	# })
 
-	scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour=10, minute=30, kwargs={
+	scheduler.add_job(send_msg_if_not_plus, trigger="cron", hour=5, minute=30, kwargs={
 		"bot": bot,
 	}, )
-	scheduler.add_job(delete_plus, trigger="cron", hour=23, minute=50, kwargs={
+	scheduler.add_job(delete_plus, trigger="cron", hour=18, minute=50, kwargs={
 		"bot": bot,
 	}, )
 
